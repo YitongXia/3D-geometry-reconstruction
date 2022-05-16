@@ -29,6 +29,7 @@
 
 using namespace easy3d;
 
+
 // TODO: check if the input is valid (always good because you never known how others will call your function).
 bool if_input_valid(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
 {
@@ -75,19 +76,21 @@ Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &points_0,const std:
     return F;
 }
 
-void compute_essential_E(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+Matrix compute_essential_E(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
 {
-    Matrix K;
-    Matrix33 W;
-    W.set_row(0,{0,-1,0});
-    W.set_row(1,{1,0,0});
-    W.set_row(2,{0,0,1});
+    Matrix E;
+    for(int i=0;i<points_0.size();++i)
+    {
+        Vector2D pt0=points_0[i];
+        Vector2D pt1=points_1[i];
+        Vector e = (pt0.x()*pt1.x(),pt1.x()*pt0.y(),pt1.x(),pt1.y()*pt0.x(),pt1.y()*pt0.y(),pt1.y(),pt0.x(),pt0.y(),1);
+        E.set_row(i,e);
+    }
+    return E;
+}
 
-    Matrix33 Z;
-    Z.set_row(0,{0,1,0});
-    Z.set_row(1,{-1,0,0});
-    Z.set_row(2,{0,0,0});
-
+void R_t(Matrix &E) {
+    
 }
 
 
