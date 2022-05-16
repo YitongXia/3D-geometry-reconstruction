@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code
+# Install script for directory: C:/Users/pro/3DCV_Triangulation
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/A2_Triangulation_Code")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/3DCV_Triangulation")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,10 +34,10 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/3rd_party/cmake_install.cmake")
-  include("C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/easy3d/cmake_install.cmake")
-  include("C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/Triangulation/cmake_install.cmake")
-  include("C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/Tutorial_NonlinearLeastSquares/cmake_install.cmake")
+  include("C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/3rd_party/cmake_install.cmake")
+  include("C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/easy3d/cmake_install.cmake")
+  include("C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/Triangulation/cmake_install.cmake")
+  include("C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/Tutorial_NonlinearLeastSquares/cmake_install.cmake")
 
 endif()
 
@@ -49,5 +49,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")

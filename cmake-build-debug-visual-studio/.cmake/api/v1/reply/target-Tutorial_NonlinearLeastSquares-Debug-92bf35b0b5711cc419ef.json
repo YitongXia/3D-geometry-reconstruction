@@ -73,15 +73,15 @@
 			[
 				{
 					"backtrace" : 4,
-					"path" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code"
+					"path" : "C:/Users/pro/3DCV_Triangulation"
 				},
 				{
 					"backtrace" : 4,
-					"path" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio"
+					"path" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio"
 				},
 				{
 					"backtrace" : 2,
-					"path" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/glog/.."
+					"path" : "C:/Users/pro/3DCV_Triangulation/3rd_party/glog/.."
 				}
 			],
 			"language" : "CXX",

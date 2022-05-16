@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/glog
+# Install script for directory: C:/Users/pro/3DCV_Triangulation/3rd_party/glog
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/A2_Triangulation_Code")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/3DCV_Triangulation")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 

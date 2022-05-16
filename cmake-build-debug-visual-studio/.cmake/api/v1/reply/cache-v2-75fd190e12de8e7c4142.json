@@ -2,6 +2,42 @@
 	"entries" : 
 	[
 		{
+			"name" : "3DCV_Triangulation_BINARY_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio"
+		},
+		{
+			"name" : "3DCV_Triangulation_IS_TOP_LEVEL",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "ON"
+		},
+		{
+			"name" : "3DCV_Triangulation_SOURCE_DIR",
+			"properties" : 
+			[
+				{
+					"name" : "HELPSTRING",
+					"value" : "Value Computed by CMake"
+				}
+			],
+			"type" : "STATIC",
+			"value" : "C:/Users/pro/3DCV_Triangulation"
+		},
+		{
 			"name" : "3rd_glew_BINARY_DIR",
 			"properties" : 
 			[
@@ -11,7 +47,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/3rd_party/glew"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/3rd_party/glew"
 		},
 		{
 			"name" : "3rd_glew_IS_TOP_LEVEL",
@@ -47,7 +83,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/glew"
+			"value" : "C:/Users/pro/3DCV_Triangulation/3rd_party/glew"
 		},
 		{
 			"name" : "3rd_glog_BINARY_DIR",
@@ -59,7 +95,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/3rd_party/glog"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/3rd_party/glog"
 		},
 		{
 			"name" : "3rd_glog_IS_TOP_LEVEL",
@@ -83,43 +119,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/glog"
-		},
-		{
-			"name" : "A2_Triangulation_Code_BINARY_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio"
-		},
-		{
-			"name" : "A2_Triangulation_Code_IS_TOP_LEVEL",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "ON"
-		},
-		{
-			"name" : "A2_Triangulation_Code_SOURCE_DIR",
-			"properties" : 
-			[
-				{
-					"name" : "HELPSTRING",
-					"value" : "Value Computed by CMake"
-				}
-			],
-			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code"
+			"value" : "C:/Users/pro/3DCV_Triangulation/3rd_party/glog"
 		},
 		{
 			"name" : "BUILD_SHARED_LIBS",
@@ -303,7 +303,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio"
+			"value" : "c:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -791,7 +791,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code"
+			"value" : "C:/Users/pro/3DCV_Triangulation"
 		},
 		{
 			"name" : "CMAKE_INSTALL_BINDIR",
@@ -995,7 +995,7 @@
 				}
 			],
 			"type" : "PATH",
-			"value" : "C:/Program Files (x86)/A2_Triangulation_Code"
+			"value" : "C:/Program Files (x86)/3DCV_Triangulation"
 		},
 		{
 			"name" : "CMAKE_INSTALL_RUNSTATEDIR",
@@ -1243,7 +1243,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "A2_Triangulation_Code"
+			"value" : "3DCV_Triangulation"
 		},
 		{
 			"name" : "CMAKE_PROJECT_VERSION",
@@ -1655,7 +1655,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/3rd_party/cminpack"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/3rd_party/cminpack"
 		},
 		{
 			"name" : "CMINPACK_IS_TOP_LEVEL",
@@ -1679,7 +1679,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/cminpack"
+			"value" : "C:/Users/pro/3DCV_Triangulation/3rd_party/cminpack"
 		},
 		{
 			"name" : "CMINPACK_SOVERSION",
@@ -1739,7 +1739,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/3rd_party/glfw"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/3rd_party/glfw"
 		},
 		{
 			"name" : "GLFW_BUILD_DOCS",
@@ -1811,7 +1811,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/glfw"
+			"value" : "C:/Users/pro/3DCV_Triangulation/3rd_party/glfw"
 		},
 		{
 			"name" : "GLFW_USE_HYBRID_HPG",
@@ -1903,7 +1903,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/Triangulation"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/Triangulation"
 		},
 		{
 			"name" : "Triangulation_IS_TOP_LEVEL",
@@ -1927,7 +1927,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/Triangulation"
+			"value" : "C:/Users/pro/3DCV_Triangulation/Triangulation"
 		},
 		{
 			"name" : "Tutorial_NonlinearLeastSquares_BINARY_DIR",
@@ -1939,7 +1939,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/Tutorial_NonlinearLeastSquares"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/Tutorial_NonlinearLeastSquares"
 		},
 		{
 			"name" : "Tutorial_NonlinearLeastSquares_IS_TOP_LEVEL",
@@ -1963,7 +1963,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/Tutorial_NonlinearLeastSquares"
+			"value" : "C:/Users/pro/3DCV_Triangulation/Tutorial_NonlinearLeastSquares"
 		},
 		{
 			"name" : "USE_BLAS",
@@ -1999,7 +1999,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Program Files (x86)/A2_Triangulation_Code"
+			"value" : "C:/Program Files (x86)/3DCV_Triangulation"
 		},
 		{
 			"name" : "easy3d_core_BINARY_DIR",
@@ -2011,7 +2011,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/easy3d/core"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/easy3d/core"
 		},
 		{
 			"name" : "easy3d_core_IS_TOP_LEVEL",
@@ -2047,7 +2047,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/easy3d/core"
+			"value" : "C:/Users/pro/3DCV_Triangulation/easy3d/core"
 		},
 		{
 			"name" : "easy3d_fileio_BINARY_DIR",
@@ -2059,7 +2059,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/easy3d/fileio"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/easy3d/fileio"
 		},
 		{
 			"name" : "easy3d_fileio_IS_TOP_LEVEL",
@@ -2095,7 +2095,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/easy3d/fileio"
+			"value" : "C:/Users/pro/3DCV_Triangulation/easy3d/fileio"
 		},
 		{
 			"name" : "easy3d_optimizer_BINARY_DIR",
@@ -2107,7 +2107,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/easy3d/optimizer"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/easy3d/optimizer"
 		},
 		{
 			"name" : "easy3d_optimizer_IS_TOP_LEVEL",
@@ -2143,7 +2143,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/easy3d/optimizer"
+			"value" : "C:/Users/pro/3DCV_Triangulation/easy3d/optimizer"
 		},
 		{
 			"name" : "easy3d_util_BINARY_DIR",
@@ -2155,7 +2155,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/easy3d/util"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/easy3d/util"
 		},
 		{
 			"name" : "easy3d_util_IS_TOP_LEVEL",
@@ -2191,7 +2191,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/easy3d/util"
+			"value" : "C:/Users/pro/3DCV_Triangulation/easy3d/util"
 		},
 		{
 			"name" : "easy3d_viewer_BINARY_DIR",
@@ -2203,7 +2203,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/easy3d/viewer"
+			"value" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/easy3d/viewer"
 		},
 		{
 			"name" : "easy3d_viewer_IS_TOP_LEVEL",
@@ -2239,7 +2239,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/easy3d/viewer"
+			"value" : "C:/Users/pro/3DCV_Triangulation/easy3d/viewer"
 		}
 	],
 	"kind" : "cache",

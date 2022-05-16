@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/cminpack
+# Install script for directory: C:/Users/pro/3DCV_Triangulation/3rd_party/cminpack
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/A2_Triangulation_Code")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/3DCV_Triangulation")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,19 +33,19 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xlibraryx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/lib/3rd_cminpack.lib")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib" TYPE STATIC_LIBRARY FILES "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/lib/3rd_cminpack.lib")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xcminpack_hdrsx" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/include/cminpack-" TYPE FILE FILES
-    "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/cminpack/cminpack.h"
-    "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/cminpack/minpack.h"
+    "C:/Users/pro/3DCV_Triangulation/3rd_party/cminpack/cminpack.h"
+    "C:/Users/pro/3DCV_Triangulation/3rd_party/cminpack/minpack.h"
     )
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/3rd_party/cminpack/cmake/cmake_install.cmake")
+  include("C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/3rd_party/cminpack/cmake/cmake_install.cmake")
 
 endif()
 

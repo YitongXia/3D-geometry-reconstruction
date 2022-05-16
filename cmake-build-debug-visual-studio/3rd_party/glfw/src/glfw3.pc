@@ -1,7 +1,7 @@
-prefix=C:/Program Files (x86)/A2_Triangulation_Code
+prefix=C:/Program Files (x86)/3DCV_Triangulation
 exec_prefix=${prefix}
-includedir=C:/Program Files (x86)/A2_Triangulation_Code/include
-libdir=C:/Program Files (x86)/A2_Triangulation_Code/lib
+includedir=C:/Program Files (x86)/3DCV_Triangulation/include
+libdir=C:/Program Files (x86)/3DCV_Triangulation/lib
 
 Name: GLFW
 Description: A multi-platform library for OpenGL, window and input

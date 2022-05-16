@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/glfw
+# Install script for directory: C:/Users/pro/3DCV_Triangulation/3rd_party/glfw
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/A2_Triangulation_Code")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/3DCV_Triangulation")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -34,7 +34,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
-  include("C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/3rd_party/glfw/src/cmake_install.cmake")
+  include("C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/3rd_party/glfw/src/cmake_install.cmake")
 
 endif()
 

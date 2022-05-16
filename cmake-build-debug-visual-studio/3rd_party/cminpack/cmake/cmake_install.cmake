@@ -1,8 +1,8 @@
-# Install script for directory: C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/cminpack/cmake
+# Install script for directory: C:/Users/pro/3DCV_Triangulation/3rd_party/cminpack/cmake
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
-  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/A2_Triangulation_Code")
+  set(CMAKE_INSTALL_PREFIX "C:/Program Files (x86)/3DCV_Triangulation")
 endif()
 string(REGEX REPLACE "/$" "" CMAKE_INSTALL_PREFIX "${CMAKE_INSTALL_PREFIX}")
 
@@ -33,10 +33,10 @@ if(NOT DEFINED CMAKE_CROSSCOMPILING)
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xpkgconfigx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio/3rd_party/cminpack/cmake/cminpack.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio/3rd_party/cminpack/cmake/cminpack.pc")
 endif()
 
 if("x${CMAKE_INSTALL_COMPONENT}x" STREQUAL "xUnspecifiedx" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/CMinpack" TYPE FILE FILES "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/cminpack/cmake/CMinpackConfig.cmake")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/cmake/CMinpack" TYPE FILE FILES "C:/Users/pro/3DCV_Triangulation/3rd_party/cminpack/cmake/CMinpackConfig.cmake")
 endif()
 

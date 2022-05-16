@@ -6,7 +6,7 @@
 # It is included in the main 'build.ninja'.
 
 # =============================================================================
-# Project: A2_Triangulation_Code
+# Project: 3DCV_Triangulation
 # Configurations: Debug
 # =============================================================================
 # =============================================================================
@@ -227,7 +227,7 @@ rule CXX_EXECUTABLE_LINKER__Tutorial_NonlinearLeastSquares_Debug
 # Rule for re-running cmake.
 
 rule RERUN_CMAKE
-  command = "C:\Program Files\JetBrains\CLion 2022.1\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -SC:\Users\pro\Desktop\A2_Triangulation\A2_Triangulation_Code -BC:\Users\pro\Desktop\A2_Triangulation\A2_Triangulation_Code\cmake-build-debug-visual-studio
+  command = "C:\Program Files\JetBrains\CLion 2022.1\bin\cmake\win\bin\cmake.exe" --regenerate-during-build -SC:\Users\pro\3DCV_Triangulation -BC:\Users\pro\3DCV_Triangulation\cmake-build-debug-visual-studio
   description = Re-running CMake...
   generator = 1
 

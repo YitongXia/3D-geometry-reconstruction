@@ -94,23 +94,23 @@
 			[
 				{
 					"backtrace" : 5,
-					"path" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code"
+					"path" : "C:/Users/pro/3DCV_Triangulation"
 				},
 				{
 					"backtrace" : 5,
-					"path" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio"
+					"path" : "C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio"
 				},
 				{
 					"backtrace" : 2,
-					"path" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/glew/include"
+					"path" : "C:/Users/pro/3DCV_Triangulation/3rd_party/glew/include"
 				},
 				{
 					"backtrace" : 2,
-					"path" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/glfw/include"
+					"path" : "C:/Users/pro/3DCV_Triangulation/3rd_party/glfw/include"
 				},
 				{
 					"backtrace" : 2,
-					"path" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/3rd_party/glog/.."
+					"path" : "C:/Users/pro/3DCV_Triangulation/3rd_party/glog/.."
 				}
 			],
 			"language" : "CXX",
@@ -167,10 +167,6 @@
 		},
 		{
 			"backtrace" : 2,
-			"id" : "easy3d_core::@cb35a92cddfea1372b37"
-		},
-		{
-			"backtrace" : 2,
 			"id" : "3rd_glog::@d3cd30be08f891a1b326"
 		},
 		{
@@ -180,6 +176,10 @@
 		{
 			"backtrace" : 2,
 			"id" : "easy3d_util::@a5cd75459df24341c131"
+		},
+		{
+			"backtrace" : 2,
+			"id" : "easy3d_core::@cb35a92cddfea1372b37"
 		}
 	],
 	"folder" : 

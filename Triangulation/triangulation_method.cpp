@@ -29,6 +29,83 @@
 
 using namespace easy3d;
 
+// TODO: check if the input is valid (always good because you never known how others will call your function).
+bool if_input_valid(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+{
+    auto pt0_size=points_0.size();
+    auto pt1_size=points_1.size();
+    if(pt0_size == pt1_size && pt0_size>=8 && pt1_size>=8)
+        return true;
+    else return false;
+}
+
+// TODO: Estimate relative pose of two views. This can be subdivided into
+//      - estimate the fundamental matrix F;
+//      - compute the essential matrix E;
+//      - recover rotation R and t.
+
+Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+{
+    Matrix W;
+    for(int i=0;i<points_0.size();++i)
+    {
+        Vector2D pt0=points_0[i];
+        Vector2D pt1=points_1[i];
+        Vector w = (pt0.x() * pt1.x(),pt0.y()*pt1.x(),pt1.x(),pt0.x() * pt1.y(),pt0.y()*pt1.y(),pt1.y(),pt0.x(),pt0.y(),1);
+        W.set_row(i,w);
+    }
+
+    int num_rows = W.rows();
+    /// get the number of columns.
+    int num_cols = W.cols();
+
+    Matrix u(num_rows, num_rows, 0.0);   // initialized with 0s
+    Matrix s(num_rows, num_cols, 0.0);   // initialized with 0s
+    Matrix v(num_cols, num_cols, 0.0);   // initialized with 0s
+
+    /// Compute the SVD decomposition of A.
+    svd_decompose(W, u, s, v);
+
+    Vector f = v.get_column(v.cols()-1);
+
+    Matrix33 F;
+    F.set_row(0,{f[0],f[1],f[2]});
+    F.set_row(1,{f[3],f[4],f[5]});
+    F.set_row(2,{f[6],f[7],f[8]});
+    return F;
+}
+
+void compute_essential_E(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+{
+    Matrix K;
+    Matrix33 W;
+    W.set_row(0,{0,-1,0});
+    W.set_row(1,{1,0,0});
+    W.set_row(2,{0,0,1});
+
+    Matrix33 Z;
+    Z.set_row(0,{0,1,0});
+    Z.set_row(1,{-1,0,0});
+    Z.set_row(2,{0,0,0});
+
+}
+
+
+// TODO: Reconstruct 3D points. The main task is
+//      - triangulate a pair of image points (i.e., compute the 3D coordinates for each corresponding point pair)
+
+// TODO: Don't forget to
+//          - write your recovered 3D points into 'points_3d' (so the viewer can visualize the 3D points for you);
+//          - write the recovered relative pose into R and t (the view will be updated as seen from the 2nd camera,
+//            which can help you check if R and t are correct).
+//       You must return either 'true' or 'false' to indicate whether the triangulation was successful (so the
+//       viewer will be notified to visualize the 3D points and update the view).
+//       There are a few cases you should return 'false' instead, for example:
+//          - function not implemented yet;
+//          - input not valid (e.g., not enough points, point numbers don't match);
+//          - encountered failure in any step.
+
+
 
 /**
  * TODO: Finish this function for reconstructing 3D geometry from corresponding image points.

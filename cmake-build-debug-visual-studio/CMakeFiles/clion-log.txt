@@ -1,4 +1,4 @@
-"C:\Program Files\JetBrains\CLion 2022.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2022.1/bin/ninja/win/ninja.exe" -G Ninja -S C:\Users\pro\Desktop\A2_Triangulation\A2_Triangulation_Code -B C:\Users\pro\Desktop\A2_Triangulation\A2_Triangulation_Code\cmake-build-debug-visual-studio
+"C:\Program Files\JetBrains\CLion 2022.1\bin\cmake\win\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2022.1/bin/ninja/win/ninja.exe" -G Ninja -S C:\Users\pro\3DCV_Triangulation -B C:\Users\pro\3DCV_Triangulation\cmake-build-debug-visual-studio
 -- The C compiler identification is MSVC 19.29.30143.0
 -- The CXX compiler identification is MSVC 19.29.30143.0
 -- Detecting C compiler ABI info
@@ -30,4 +30,4 @@
 -- Could NOT find CBLAS (missing: CBLAS_LIBRARIES) 
 -- Configuring done
 -- Generating done
--- Build files have been written to: C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio
+-- Build files have been written to: C:/Users/pro/3DCV_Triangulation/cmake-build-debug-visual-studio
