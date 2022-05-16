@@ -1,0 +1,515 @@
+{
+	"configurations" : 
+	[
+		{
+			"directories" : 
+			[
+				{
+					"build" : ".",
+					"childIndexes" : 
+					[
+						1,
+						8,
+						14,
+						15
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-.-Debug-d0094a50bb2071803777.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"projectIndex" : 0,
+					"source" : "."
+				},
+				{
+					"build" : "3rd_party",
+					"childIndexes" : 
+					[
+						2,
+						3,
+						5,
+						6
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-3rd_party-Debug-c5a5201ee6026dcfec41.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "3rd_party"
+				},
+				{
+					"build" : "3rd_party/glew",
+					"jsonFile" : "directory-3rd_party.glew-Debug-38f3dd21b9258f3be404.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 1,
+					"source" : "3rd_party/glew",
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"build" : "3rd_party/glfw",
+					"childIndexes" : 
+					[
+						4
+					],
+					"jsonFile" : "directory-3rd_party.glfw-Debug-e5b4b31e2f4169eb3d81.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 2,
+					"source" : "3rd_party/glfw"
+				},
+				{
+					"build" : "3rd_party/glfw/src",
+					"jsonFile" : "directory-3rd_party.glfw.src-Debug-7a0af1aa392b1825b126.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 3,
+					"projectIndex" : 2,
+					"source" : "3rd_party/glfw/src",
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"build" : "3rd_party/glog",
+					"jsonFile" : "directory-3rd_party.glog-Debug-5269894a932449cc415c.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 3,
+					"source" : "3rd_party/glog",
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"build" : "3rd_party/cminpack",
+					"childIndexes" : 
+					[
+						7
+					],
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-3rd_party.cminpack-Debug-c1f6234d66e40eb62a95.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 1,
+					"projectIndex" : 4,
+					"source" : "3rd_party/cminpack",
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"build" : "3rd_party/cminpack/cmake",
+					"hasInstallRule" : true,
+					"jsonFile" : "directory-3rd_party.cminpack.cmake-Debug-1571009888ec57362d5f.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 6,
+					"projectIndex" : 4,
+					"source" : "3rd_party/cminpack/cmake"
+				},
+				{
+					"build" : "easy3d",
+					"childIndexes" : 
+					[
+						9,
+						10,
+						11,
+						12,
+						13
+					],
+					"jsonFile" : "directory-easy3d-Debug-1725198696594f4d80cf.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 0,
+					"source" : "easy3d"
+				},
+				{
+					"build" : "easy3d/core",
+					"jsonFile" : "directory-easy3d.core-Debug-2c41456c540c039ef378.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 8,
+					"projectIndex" : 5,
+					"source" : "easy3d/core",
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"build" : "easy3d/fileio",
+					"jsonFile" : "directory-easy3d.fileio-Debug-b15e6ce9cb06219b5d93.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 8,
+					"projectIndex" : 6,
+					"source" : "easy3d/fileio",
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"build" : "easy3d/util",
+					"jsonFile" : "directory-easy3d.util-Debug-c56ae297e8319ee4fa17.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 8,
+					"projectIndex" : 7,
+					"source" : "easy3d/util",
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"build" : "easy3d/viewer",
+					"jsonFile" : "directory-easy3d.viewer-Debug-d279bb8440a98cfe651e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 8,
+					"projectIndex" : 8,
+					"source" : "easy3d/viewer",
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"build" : "easy3d/optimizer",
+					"jsonFile" : "directory-easy3d.optimizer-Debug-a90a06d19ac293e718ce.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 8,
+					"projectIndex" : 9,
+					"source" : "easy3d/optimizer",
+					"targetIndexes" : 
+					[
+						8
+					]
+				},
+				{
+					"build" : "Triangulation",
+					"jsonFile" : "directory-Triangulation-Debug-a7eab80ce29c6903e5c2.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 10,
+					"source" : "Triangulation",
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"build" : "Tutorial_NonlinearLeastSquares",
+					"jsonFile" : "directory-Tutorial_NonlinearLeastSquares-Debug-4466b6f3249b0c18f39e.json",
+					"minimumCMakeVersion" : 
+					{
+						"string" : "3.1"
+					},
+					"parentIndex" : 0,
+					"projectIndex" : 11,
+					"source" : "Tutorial_NonlinearLeastSquares",
+					"targetIndexes" : 
+					[
+						5
+					]
+				}
+			],
+			"name" : "Debug",
+			"projects" : 
+			[
+				{
+					"childIndexes" : 
+					[
+						1,
+						2,
+						3,
+						4,
+						5,
+						6,
+						7,
+						8,
+						9,
+						10,
+						11
+					],
+					"directoryIndexes" : 
+					[
+						0,
+						1,
+						8
+					],
+					"name" : "A2_Triangulation_Code"
+				},
+				{
+					"directoryIndexes" : 
+					[
+						2
+					],
+					"name" : "3rd_glew",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						1
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						3,
+						4
+					],
+					"name" : "GLFW",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						2
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						5
+					],
+					"name" : "3rd_glog",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						3
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						6,
+						7
+					],
+					"name" : "CMINPACK",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						0
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						9
+					],
+					"name" : "easy3d_core",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						6
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						10
+					],
+					"name" : "easy3d_fileio",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						7
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						11
+					],
+					"name" : "easy3d_util",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						9
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						12
+					],
+					"name" : "easy3d_viewer",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						10
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						13
+					],
+					"name" : "easy3d_optimizer",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						8
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						14
+					],
+					"name" : "Triangulation",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						4
+					]
+				},
+				{
+					"directoryIndexes" : 
+					[
+						15
+					],
+					"name" : "Tutorial_NonlinearLeastSquares",
+					"parentIndex" : 0,
+					"targetIndexes" : 
+					[
+						5
+					]
+				}
+			],
+			"targets" : 
+			[
+				{
+					"directoryIndex" : 6,
+					"id" : "3rd_cminpack::@e3843e3c45493f70bc82",
+					"jsonFile" : "target-3rd_cminpack-Debug-86605a73161f4dcac308.json",
+					"name" : "3rd_cminpack",
+					"projectIndex" : 4
+				},
+				{
+					"directoryIndex" : 2,
+					"id" : "3rd_glew::@3782b4e7c4f9d2ba2c57",
+					"jsonFile" : "target-3rd_glew-Debug-1520ce81e88cacb02fdc.json",
+					"name" : "3rd_glew",
+					"projectIndex" : 1
+				},
+				{
+					"directoryIndex" : 4,
+					"id" : "3rd_glfw::@82eb073f23ca4a565ec2",
+					"jsonFile" : "target-3rd_glfw-Debug-7a62525c495c25b264f0.json",
+					"name" : "3rd_glfw",
+					"projectIndex" : 2
+				},
+				{
+					"directoryIndex" : 5,
+					"id" : "3rd_glog::@d3cd30be08f891a1b326",
+					"jsonFile" : "target-3rd_glog-Debug-06200c92228a309eb6a7.json",
+					"name" : "3rd_glog",
+					"projectIndex" : 3
+				},
+				{
+					"directoryIndex" : 14,
+					"id" : "Triangulation::@1a1c97db115fb7e6d449",
+					"jsonFile" : "target-Triangulation-Debug-5013ac2547f05049eab7.json",
+					"name" : "Triangulation",
+					"projectIndex" : 10
+				},
+				{
+					"directoryIndex" : 15,
+					"id" : "Tutorial_NonlinearLeastSquares::@bf142b3253add2786765",
+					"jsonFile" : "target-Tutorial_NonlinearLeastSquares-Debug-c1fa919fa80d77451f14.json",
+					"name" : "Tutorial_NonlinearLeastSquares",
+					"projectIndex" : 11
+				},
+				{
+					"directoryIndex" : 9,
+					"id" : "easy3d_core::@cb35a92cddfea1372b37",
+					"jsonFile" : "target-easy3d_core-Debug-3e84280a8f0f4eb7a881.json",
+					"name" : "easy3d_core",
+					"projectIndex" : 5
+				},
+				{
+					"directoryIndex" : 10,
+					"id" : "easy3d_fileio::@1ac0250c1f979f6df208",
+					"jsonFile" : "target-easy3d_fileio-Debug-5a1202fc354472dae14b.json",
+					"name" : "easy3d_fileio",
+					"projectIndex" : 6
+				},
+				{
+					"directoryIndex" : 13,
+					"id" : "easy3d_optimizer::@9f3a39959e6843a55c76",
+					"jsonFile" : "target-easy3d_optimizer-Debug-c2ddb48a4b1c0b81d5f3.json",
+					"name" : "easy3d_optimizer",
+					"projectIndex" : 9
+				},
+				{
+					"directoryIndex" : 11,
+					"id" : "easy3d_util::@a5cd75459df24341c131",
+					"jsonFile" : "target-easy3d_util-Debug-b9300274c0fdddac2b47.json",
+					"name" : "easy3d_util",
+					"projectIndex" : 7
+				},
+				{
+					"directoryIndex" : 12,
+					"id" : "easy3d_viewer::@e94df83b7addc850682d",
+					"jsonFile" : "target-easy3d_viewer-Debug-9011b737818a55ef11f5.json",
+					"name" : "easy3d_viewer",
+					"projectIndex" : 8
+				}
+			]
+		}
+	],
+	"kind" : "codemodel",
+	"paths" : 
+	{
+		"build" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code/cmake-build-debug-visual-studio",
+		"source" : "C:/Users/pro/Desktop/A2_Triangulation/A2_Triangulation_Code"
+	},
+	"version" : 
+	{
+		"major" : 2,
+		"minor" : 3
+	}
+}

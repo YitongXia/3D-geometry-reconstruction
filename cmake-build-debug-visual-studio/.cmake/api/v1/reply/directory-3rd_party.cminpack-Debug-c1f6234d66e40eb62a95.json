@@ -1,0 +1,62 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"install"
+		],
+		"files" : 
+		[
+			"3rd_party/cminpack/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 88,
+				"parent" : 0
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 92,
+				"parent" : 0
+			}
+		]
+	},
+	"installers" : 
+	[
+		{
+			"backtrace" : 1,
+			"component" : "library",
+			"destination" : "lib",
+			"paths" : 
+			[
+				"lib/3rd_cminpack.lib"
+			],
+			"targetId" : "3rd_cminpack::@e3843e3c45493f70bc82",
+			"targetIndex" : 0,
+			"type" : "target"
+		},
+		{
+			"backtrace" : 2,
+			"component" : "cminpack_hdrs",
+			"destination" : "include/cminpack-",
+			"paths" : 
+			[
+				"3rd_party/cminpack/cminpack.h",
+				"3rd_party/cminpack/minpack.h"
+			],
+			"type" : "file"
+		}
+	],
+	"paths" : 
+	{
+		"build" : "3rd_party/cminpack",
+		"source" : "3rd_party/cminpack"
+	}
+}
