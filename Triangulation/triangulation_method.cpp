@@ -90,7 +90,22 @@ Matrix compute_essential_E(const std::vector<Vector2D> &points_0,const std::vect
 }
 
 void R_t(Matrix &E) {
-    
+    // E=Udiag(1,1,0)VT=SR
+    int num_rows = E.rows();
+    /// get the number of columns.
+    int num_cols = E.cols();
+
+    Matrix33 W(0,-1,0,1,0,0,0,0,1);
+    Matrix33 Z(0,1,0,-1,0,0,0,0,0);
+    Matrix U(num_rows, num_rows, 0.0);
+    Matrix33 diag(1,0,0,0,1,0,0,0,0);
+    Matrix V(num_cols, num_cols, 0.0);
+    svd_decompose(E,U,diag,V);
+    // R1=U WT VT or R2=U W VT
+    Matrix R1 = U* transpose(W) * V;
+    Matrix R2=U * W * V;
+
+    Vector t = U.get_column(U.cols()-1);
 }
 
 
@@ -216,7 +231,7 @@ bool Triangulation::triangulation(
 
     // TODO: Estimate relative pose of two views. This can be subdivided into
     //      - estimate the fundamental matrix F;
-    //      - compute the essential matrix E;
+    //      - compute the matrix E;
     //      - recover rotation R and t.
 
     // TODO: Reconstruct 3D points. The main task is
