@@ -45,6 +45,76 @@ bool if_input_valid(const std::vector<Vector2D> &points_0,const std::vector<Vect
 //      - compute the essential matrix E;
 //      - recover rotation R and t.
 
+//1 - calculate the centers (corresponding pixel centers in each image separately)
+//2 - mean distance to center (in each image separately)
+//3 - compute scaling factor using mean distance  (separately slide 14)
+//4 - compute initial Fundamental matrix with norm points (slide 12-14)
+//5 - rank 2 enforcement  (slide 16,17)
+//6 - calculate T1, and T2 (slide 14) think about how you are integrating it to F
+//7 - scale scale_invariant F   where F(2,2) = 1.
+//8 - calculate E and 4 Rt settings from it (slide 20 -27)
+//9 - triangulate & compute inliers (slide 27)
+//10 - choose best RT setting & evaluate
+
+void normalization(std::vector<Vector2D> &points_0,std::vector<Vector2D> &points_1)
+{
+    // calculate centers
+    double t0x=0;
+    double t0y=0;
+    double t1x=0;
+    double t1y=0;
+    for (int i=0;i<points_0.size();++i)
+    {
+        t0x+=points_0[i].x();
+        t0y+=points_0[i].y();
+        t1x+=points_1[i].x();
+        t1y+=points_1[i].y();
+    }
+    // get mean value
+    t0x=t0x/points_0.size();
+    t0y=t0y/points_0.size();
+    t1x=t1x/points_1.size();
+    t1y=t1y/points_1.size();
+
+    // mean distance to center
+    double dist0=0;
+    double dist1=0;
+
+    for(int i=0;i<points_0.size();++i)
+    {
+        double transformed_0_x=points_0[i].x()-t0x;
+        double transformed_0_y=points_0[i].y()-t0y;
+        double transformed_1_x=points_1[i].x()-t1x;
+        double transformed_1_y=points_1[i].x()-t1y;
+
+        dist0+= sqrt(sqrt(pow(transformed_0_x,2)+ pow(transformed_0_y,2)));
+        dist1+= sqrt(sqrt(pow(transformed_1_x,2)+ pow(transformed_1_y,2)));
+    }
+    double mean_dist0=dist0/points_0.size();
+    double mean_dist1=dist1/points_1.size();
+
+    //compute scaling factor
+    double scale_0=mean_dist0 * (1/ sqrt(2));
+    double scale_1=mean_dist1 * (1/ sqrt(2));
+    Matrix33 T_0=(1/scale_0,0,-t0x/scale_0,
+                  0,1/scale_0,-t0y/scale_0,
+                  0,0,1);
+    Matrix33 T_1=(1/scale_1,0,-t0x/scale_1,
+                  0,1/scale_1,-t0y/scale_1,
+                  0,0,1);
+    for(int i=0;i<points_0.size();++i)
+    {
+        std::cout<<"the original point is: "<<points_0[i].x()<<", "<<points_0[i].y()<<std::endl;
+        std::cout<<"the original point is: "<<points_1[i].x()<<", "<<points_1[i].y()<<std::endl;
+        points_0[i].x()=(points_0[i].x()-t0x)/scale_0;
+        points_0[i].y()=(points_0[i].y()-t0y)/scale_0;
+        points_1[i].x()=(points_1[i].x()-t1x)/scale_1;
+        points_1[i].y()=(points_1[i].y()-t1y)/scale_1;
+        std::cout<<"the scaled point is: "<<points_0[i].x()<<", "<<points_0[i].y()<<std::endl;
+        std::cout<<"the acaled point is: "<<points_1[i].x()<<", "<<points_1[i].y()<<std::endl;
+    }
+}
+
 Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
 {
     Matrix W;
@@ -111,7 +181,9 @@ void R_t(Matrix &E) {
 
 // TODO: Reconstruct 3D points. The main task is
 //      - triangulate a pair of image points (i.e., compute the 3D coordinates for each corresponding point pair)
+void reconstruct() {
 
+}
 // TODO: Don't forget to
 //          - write your recovered 3D points into 'points_3d' (so the viewer can visualize the 3D points for you);
 //          - write the recovered relative pose into R and t (the view will be updated as seen from the 2nd camera,
@@ -164,6 +236,9 @@ bool Triangulation::triangulation(
                  "\t    - do NOT include the 'build' directory (which contains the intermediate files in a build step).\n"
                  "\t    - make sure your code compiles and can reproduce your results without ANY modification.\n\n" << std::flush;
 
+    std::vector<Vector2D> pt0=points_0;
+    std::vector<Vector2D> pt1=points_1;
+    normalization(pt0,pt1);
     /// Below are a few examples showing some useful data structures and APIs.
 
     /// define a 2D vector/point
