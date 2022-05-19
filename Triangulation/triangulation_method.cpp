@@ -51,77 +51,67 @@ bool if_input_valid(const std::vector<Vector2D> &points_0,const std::vector<Vect
 //4 - compute initial Fundamental matrix with norm points (slide 12-14)
 //5 - rank 2 enforcement  (slide 16,17)
 //6 - calculate T1, and T2 (slide 14) think about how you are integrating it to F
+
 //7 - scale scale_invariant F   where F(2,2) = 1.
+
 //8 - calculate E and 4 Rt settings from it (slide 20 -27)
 //9 - triangulate & compute inliers (slide 27)
+
 //10 - choose best RT setting & evaluate
 
-void normalization(std::vector<Vector2D> &points_0,std::vector<Vector2D> &points_1)
+std::vector<Vector2D> normalization(const std::vector<Vector2D> &points,Matrix33 &T)
 {
+    std::vector<Vector2D> normalized_pt;
     // calculate centers
-    double t0x=0;
-    double t0y=0;
-    double t1x=0;
-    double t1y=0;
-    for (int i=0;i<points_0.size();++i)
+    double tx=0;
+    double ty=0;
+    for (auto & i : points)
     {
-        t0x+=points_0[i].x();
-        t0y+=points_0[i].y();
-        t1x+=points_1[i].x();
-        t1y+=points_1[i].y();
+        tx+=i.x();
+        ty+=i.y();
     }
     // get mean value
-    t0x=t0x/points_0.size();
-    t0y=t0y/points_0.size();
-    t1x=t1x/points_1.size();
-    t1y=t1y/points_1.size();
+    tx=tx/points.size();
+    ty=ty/points.size();
 
     // mean distance to center
-    double dist0=0;
     double dist1=0;
 
-    for(int i=0;i<points_0.size();++i)
+    for(auto & i : points)
     {
-        double transformed_0_x=points_0[i].x()-t0x;
-        double transformed_0_y=points_0[i].y()-t0y;
-        double transformed_1_x=points_1[i].x()-t1x;
-        double transformed_1_y=points_1[i].x()-t1y;
-
-        dist0+= sqrt(sqrt(pow(transformed_0_x,2)+ pow(transformed_0_y,2)));
+        double transformed_1_x=i.x()-tx;
+        double transformed_1_y=i.x()-ty;
         dist1+= sqrt(sqrt(pow(transformed_1_x,2)+ pow(transformed_1_y,2)));
     }
-    double mean_dist0=dist0/points_0.size();
-    double mean_dist1=dist1/points_1.size();
+
+    double mean_dist1=dist1/points.size();
 
     //compute scaling factor
-    double scale_0=mean_dist0 * (1/ sqrt(2));
     double scale_1=mean_dist1 * (1/ sqrt(2));
-    Matrix33 T_0=(1/scale_0,0,-t0x/scale_0,
-                  0,1/scale_0,-t0y/scale_0,
-                  0,0,1);
-    Matrix33 T_1=(1/scale_1,0,-t0x/scale_1,
-                  0,1/scale_1,-t0y/scale_1,
-                  0,0,1);
-    for(int i=0;i<points_0.size();++i)
-    {
-        std::cout<<"the original point is: "<<points_0[i].x()<<", "<<points_0[i].y()<<std::endl;
-        std::cout<<"the original point is: "<<points_1[i].x()<<", "<<points_1[i].y()<<std::endl;
-        points_0[i].x()=(points_0[i].x()-t0x)/scale_0;
-        points_0[i].y()=(points_0[i].y()-t0y)/scale_0;
-        points_1[i].x()=(points_1[i].x()-t1x)/scale_1;
-        points_1[i].y()=(points_1[i].y()-t1y)/scale_1;
-        std::cout<<"the scaled point is: "<<points_0[i].x()<<", "<<points_0[i].y()<<std::endl;
-        std::cout<<"the acaled point is: "<<points_1[i].x()<<", "<<points_1[i].y()<<std::endl;
+
+    T=(1/scale_1,0,-tx/scale_1,
+            0,1/scale_1,-ty/scale_1,
+            0,0,1);
+
+    for(int i=0;i<points.size();++i) {
+        std::cout << "the original point is: " << points[i].x() << ", " << points[i].y() << std::endl;
+
+        normalized_pt.emplace_back((points[i].x() - tx) / scale_1,(points[i].y() - ty) / scale_1);
+
+        std::cout << "the scaled point is: " << normalized_pt[i].x() << ", " << normalized_pt[i].y() << std::endl;
     }
+    return normalized_pt;
 }
 
-Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+
+// compute initial fundamental matrix
+Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &norm_pt_0,const std::vector<Vector2D> &norm_pt_1)
 {
     Matrix W;
-    for(int i=0;i<points_0.size();++i)
+    for(int i=0;i<norm_pt_0.size();++i)
     {
-        Vector2D pt0=points_0[i];
-        Vector2D pt1=points_1[i];
+        Vector2D pt0=norm_pt_0[i];
+        Vector2D pt1=norm_pt_1[i];
         Vector w = (pt0.x() * pt1.x(),pt0.y()*pt1.x(),pt1.x(),pt0.x() * pt1.y(),pt0.y()*pt1.y(),pt1.y(),pt0.x(),pt0.y(),1);
         W.set_row(i,w);
     }
@@ -137,13 +127,18 @@ Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &points_0,const std:
     /// Compute the SVD decomposition of A.
     svd_decompose(W, u, s, v);
 
-    Vector f = v.get_column(v.cols()-1);
+    s[2][2]=0;
 
-    Matrix33 F;
-    F.set_row(0,{f[0],f[1],f[2]});
-    F.set_row(1,{f[3],f[4],f[5]});
-    F.set_row(2,{f[6],f[7],f[8]});
+    Matrix F = u * s * v;
+
     return F;
+}
+
+// denormalization
+Matrix33 denormalization(Matrix33 &F, Matrix33 T0, Matrix33 T1)
+{
+    Matrix33 denormalization_F=T1 * F * T0;
+    return denormalization_F;
 }
 
 Matrix compute_essential_E(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
@@ -236,9 +231,13 @@ bool Triangulation::triangulation(
                  "\t    - do NOT include the 'build' directory (which contains the intermediate files in a build step).\n"
                  "\t    - make sure your code compiles and can reproduce your results without ANY modification.\n\n" << std::flush;
 
-    std::vector<Vector2D> pt0=points_0;
-    std::vector<Vector2D> pt1=points_1;
-    normalization(pt0,pt1);
+    Matrix33 T0;
+    Matrix33 T1;
+    std::vector<Vector2D> normalized_pt0= normalization(points_0,T0);
+    std::vector<Vector2D> normalized_pt1= normalization(points_1,T1);
+
+
+
     /// Below are a few examples showing some useful data structures and APIs.
 
     /// define a 2D vector/point
