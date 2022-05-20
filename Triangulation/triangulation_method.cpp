@@ -29,6 +29,15 @@
 
 using namespace easy3d;
 
+void print_matrix33(Matrix33 &T0)
+{
+    std::cout<<"Matrix:"<<std::endl;
+    std::cout<<"the size is "<<T0.rows()<<" * "<<T0.cols()<<std::endl;
+    std::cout<<T0(0,0) <<", "<<T0(0,1) <<", "<<T0(0,2) <<"\n";
+    std::cout<<T0(1,0) <<", "<<T0(1,1) <<", "<<T0(1,2) <<"\n";
+    std::cout<<T0(2,0) <<", "<<T0(2,1) <<", "<<T0(2,2) <<std::endl;
+    std::cout<<"\n";
+}
 
 // TODO: check if the input is valid (always good because you never known how others will call your function).
 bool if_input_valid(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
@@ -59,7 +68,7 @@ bool if_input_valid(const std::vector<Vector2D> &points_0,const std::vector<Vect
 
 //10 - choose best RT setting & evaluate
 
-std::vector<Vector2D> normalization(const std::vector<Vector2D> &points,Matrix33 &T)
+std::vector<Vector2D> normalization(const std::vector<Vector2D> &points, Matrix33 &T)
 {
     std::vector<Vector2D> normalized_pt;
     // calculate centers
@@ -75,82 +84,121 @@ std::vector<Vector2D> normalization(const std::vector<Vector2D> &points,Matrix33
     ty=ty/points.size();
 
     // mean distance to center
-    double dist1=0;
+    double dist=0;
 
     for(auto & i : points)
     {
         double transformed_1_x=i.x()-tx;
-        double transformed_1_y=i.x()-ty;
-        dist1+= sqrt(pow(transformed_1_x,2)+ pow(transformed_1_y,2));
+        double transformed_1_y=i.y()-ty;
+
+        dist+= sqrt(pow(transformed_1_x,2)+ pow(transformed_1_y,2));
+        //dist+= pow(transformed_1_x,2)+ pow(transformed_1_y,2);
     }
 
-    double mean_dist1=dist1/points.size();
+    double mean_dist=dist/points.size();
 
     //compute scaling factor
-    double scale = sqrt(2)/mean_dist1;
+    double scale = sqrt(2)/mean_dist;
 
-    T=(scale,0,-tx * scale,
-            0,scale,-ty*scale,
-            0,0,1);
+    std::vector<double> t0={sqrt(2)/mean_dist,0,-tx * sqrt(2)/mean_dist};
+    std::vector<double> t1={0,scale,-ty*scale};
+    std::vector<double> t2={0,0,1};
+
+    T.set_row(0,t0);
+    T.set_row(1,t1);
+    T.set_row(2,t2);
 
     for(int i=0;i<points.size();++i) {
         normalized_pt.emplace_back((points[i].x() - tx) *scale,(points[i].y() - ty)*scale);
     }
 
     // for validate the mean distance is sqrt(2)
-    double dist=0;
+    double dist_1=0;
     for(auto point: normalized_pt)
     {
-        dist+= sqrt(pow(point.x(),2)+ pow(point.y(),2));
+        dist_1+= sqrt(pow(point.x(),2)+ pow(point.y(),2));
     }
-    dist=dist/normalized_pt.size();
-    std::cout<<dist<<std::endl;
+
+    dist_1=dist_1/normalized_pt.size();
+
     return normalized_pt;
 }
 
 
 // compute initial fundamental matrix
-Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &norm_pt_0,const std::vector<Vector2D> &norm_pt_1)
+Matrix estimate_fundamental_F(const std::vector<Vector2D> &norm_pt_0,const std::vector<Vector2D> &norm_pt_1)
 {
-    Matrix W(160,9,0.0);
+    int num_rows = norm_pt_0.size();
+    int num_cols = 9;
+
+    Matrix W(num_rows,num_cols,0.0);
     for(int i=0;i<norm_pt_0.size();++i)
     {
         Vector2D pt0=norm_pt_0[i];
         Vector2D pt1=norm_pt_1[i];
-        std::vector<double> w = {pt0.x() * pt1.x(),pt0.y()*pt1.x(),pt1.x(),pt0.x() * pt1.y(),pt0.y()*pt1.y(),pt1.y(),pt0.x(),pt0.y(),1};
-        W.set_row(i,w);
 
+        double u1=norm_pt_0[i].x();
+        double v1=norm_pt_0[i].y();
+
+        double u1_=norm_pt_1[i].x();
+        double v1_=norm_pt_1[i].y();
+
+        std::vector<double> w ={u1*u1_,v1 * u1_,u1_,u1*v1_,v1*v1_,v1_,u1,v1,1};
+        //std::vector<double> w = {pt0.x() * pt1.x(),pt0.y()*pt1.x(),pt1.x(),pt0.x() * pt1.y(),pt0.y()*pt1.y(),pt1.y(),pt0.x(),pt0.y(),1};
+        W.set_row(i,w);
     }
 
-    int num_rows = W.rows();
-    /// get the number of columns.
-    int num_cols = W.cols();
+    for(int i=0;i<W.rows();++i)
+    {
+        for(int j=0;j<W.get_row(i).size(); ++j)
+        {
+            std::cout<<W.get_row(i)[j]<<",";
+        }
+        std::cout<<"\n"<<std::endl;
+    }
+
+    Matrix U(num_rows, num_rows, 0.0);   // initialized with 0s
+    Matrix S(num_rows, num_cols, 0.0);   // initialized with 0s
+    Matrix V(num_cols, num_cols, 0.0);   // initialized with 0s
+
+    svd_decompose(W, U, S, V);
+
+
+    Vector f=V.get_column(V.cols()-1);
+    std::vector<double> t0={f[0],f[1],f[2]};
+    std::vector<double> t1={f[3],f[4],f[5]};
+    std::vector<double> t2={f[6],f[7],f[8]};
+
+    Matrix33 initial_F;
+    initial_F.set_row(0,t0);
+    initial_F.set_row(1,t1);
+    initial_F.set_row(2,t2);
+
+    /// Compute the SVD decomposition of A.
 
     Matrix u(num_rows, num_rows, 0.0);   // initialized with 0s
     Matrix s(num_rows, num_cols, 0.0);   // initialized with 0s
     Matrix v(num_cols, num_cols, 0.0);   // initialized with 0s
 
-    /// Compute the SVD decomposition of A.
-    svd_decompose(W, u, s, v);
-
+    svd_decompose(initial_F,u,s,v);
     s(2,2)=0;
-
-    Matrix F = u * s * v;
-
+    Matrix33 F = u * s * v.transpose();
+    print_matrix33(F);
     return F;
 }
 
 // denormalization
-Matrix33 denormalization(Matrix33 &F, Matrix33 &T0, Matrix33 &T1)
+Matrix33 denormalization(const Matrix33 &F, const Matrix33 &T0, const Matrix33 &T1)
 {
-    Matrix33 denormalization_F= transpose(T1) * F * T0;
+    Matrix33 denormalization_F= T1.transpose() * F * T0;
     return denormalization_F;
 }
+
 //7 - scale scale_invariant F   where F(2,2) = 1.
 Matrix33 scale_F(Matrix33 &F)
 {
-    F(2,2)=1;
-    return F;
+    double scale=F(2,2);
+    return F/ scale;
 }
 
 //8 - calculate E and 4 Rt settings from it (slide 20 -27)
@@ -260,70 +308,16 @@ bool Triangulation::triangulation(
     Matrix33 T1;
     std::vector<Vector2D> normalized_pt0= normalization(points_0,T0);
     std::vector<Vector2D> normalized_pt1= normalization(points_1,T1);
-    Matrix33 F = estimate_fundamental_F(normalized_pt0,normalized_pt1);
-    denormalization(F,T0,T1);
-    std::cout<<"F22 is "<<F(2,2)<<std::endl;
 
+    Matrix33 F1 = estimate_fundamental_F(normalized_pt0,normalized_pt1);
+    print_matrix33(F1);
+
+    Matrix33 F=denormalization(F1,T0,T1);
+    Matrix33 scaleF= scale_F(F);
+    print_matrix33(scaleF);
 
     /// Below are a few examples showing some useful data structures and APIs.
 
-    /// define a 2D vector/point
-    Vector2D b(1.1, 2.2);
-
-    /// define a 3D vector/point
-    Vector3D a(1.1, 2.2, 3.3);
-
-    /// get the Cartesian coordinates of a (a is treated as Homogeneous coordinates)
-    Vector2D p = a.cartesian();
-
-    /// get the Homogeneous coordinates of p
-    Vector3D q = p.homogeneous();
-
-    /// define a 3 by 3 matrix (and all elements initialized to 0.0)
-    Matrix33 A;
-
-    /// define and initialize a 3 by 3 matrix
-    Matrix33 T(1.1, 2.2, 3.3,
-               0, 2.2, 3.3,
-               0, 0, 1);
-
-    /// define and initialize a 3 by 4 matrix
-    Matrix34 M(1.1, 2.2, 3.3, 0,
-               0, 2.2, 3.3, 1,
-               0, 0, 1, 1);
-
-    /// set first row by a vector
-    M.set_row(0, Vector4D(1.1, 2.2, 3.3, 4.4));
-
-    /// set second column by a vector
-    M.set_column(1, Vector3D(5.5, 5.5, 5.5));
-
-    /// define a 15 by 9 matrix (and all elements initialized to 0.0)
-    Matrix W(15, 9, 0.0);
-    /// set the first row by a 9-dimensional vector
-    W.set_row(0, {0, 1, 2, 3, 4, 5, 6, 7, 8}); // {....} is equivalent to a std::vector<double>
-
-    /// get the number of rows.
-    int num_rows = W.rows();
-
-    /// get the number of columns.
-    int num_cols = W.cols();
-
-    /// get the the element at row 1 and column 2
-    double value = W(1, 2);
-
-    /// get the last column of a matrix
-    Vector last_column = W.get_column(W.cols() - 1);
-
-    /// define a 3 by 3 identity matrix
-    Matrix33 I = Matrix::identity(3, 3, 1.0);
-
-    /// matrix-vector product
-    Vector3D v = M * Vector4D(1, 2, 3, 4); // M is 3 by 4
-
-    ///For more functions of Matrix and Vector, please refer to 'matrix.h' and 'vector.h'
-
-    // TODO: delete all above example code in your final submission
 
     //--------------------------------------------------------------------------------------------------------------
     // implementation starts ...
