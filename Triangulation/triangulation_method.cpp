@@ -81,25 +81,30 @@ std::vector<Vector2D> normalization(const std::vector<Vector2D> &points,Matrix33
     {
         double transformed_1_x=i.x()-tx;
         double transformed_1_y=i.x()-ty;
-        dist1+= sqrt(sqrt(pow(transformed_1_x,2)+ pow(transformed_1_y,2)));
+        dist1+= sqrt(pow(transformed_1_x,2)+ pow(transformed_1_y,2));
     }
 
     double mean_dist1=dist1/points.size();
 
     //compute scaling factor
-    double scale_1=mean_dist1 * (1/ sqrt(2));
+    double scale = sqrt(2)/mean_dist1;
 
-    T=(1/scale_1,0,-tx/scale_1,
-            0,1/scale_1,-ty/scale_1,
+    T=(scale,0,-tx * scale,
+            0,scale,-ty*scale,
             0,0,1);
 
     for(int i=0;i<points.size();++i) {
-        std::cout << "the original point is: " << points[i].x() << ", " << points[i].y() << std::endl;
-
-        normalized_pt.emplace_back((points[i].x() - tx) / scale_1,(points[i].y() - ty) / scale_1);
-
-        std::cout << "the scaled point is: " << normalized_pt[i].x() << ", " << normalized_pt[i].y() << std::endl;
+        normalized_pt.emplace_back((points[i].x() - tx) *scale,(points[i].y() - ty)*scale);
     }
+
+    // for validate the mean distance is sqrt(2)
+    double dist=0;
+    for(auto point: normalized_pt)
+    {
+        dist+= sqrt(pow(point.x(),2)+ pow(point.y(),2));
+    }
+    dist=dist/normalized_pt.size();
+    std::cout<<dist<<std::endl;
     return normalized_pt;
 }
 
@@ -107,13 +112,14 @@ std::vector<Vector2D> normalization(const std::vector<Vector2D> &points,Matrix33
 // compute initial fundamental matrix
 Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &norm_pt_0,const std::vector<Vector2D> &norm_pt_1)
 {
-    Matrix W;
+    Matrix W(160,9,0.0);
     for(int i=0;i<norm_pt_0.size();++i)
     {
         Vector2D pt0=norm_pt_0[i];
         Vector2D pt1=norm_pt_1[i];
-        Vector w = (pt0.x() * pt1.x(),pt0.y()*pt1.x(),pt1.x(),pt0.x() * pt1.y(),pt0.y()*pt1.y(),pt1.y(),pt0.x(),pt0.y(),1);
+        std::vector<double> w = {pt0.x() * pt1.x(),pt0.y()*pt1.x(),pt1.x(),pt0.x() * pt1.y(),pt0.y()*pt1.y(),pt1.y(),pt0.x(),pt0.y(),1};
         W.set_row(i,w);
+
     }
 
     int num_rows = W.rows();
@@ -127,7 +133,7 @@ Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &norm_pt_0,const std
     /// Compute the SVD decomposition of A.
     svd_decompose(W, u, s, v);
 
-    s[2][2]=0;
+    s(2,2)=0;
 
     Matrix F = u * s * v;
 
@@ -135,43 +141,62 @@ Matrix33 estimate_fundamental_F(const std::vector<Vector2D> &norm_pt_0,const std
 }
 
 // denormalization
-Matrix33 denormalization(Matrix33 &F, Matrix33 T0, Matrix33 T1)
+Matrix33 denormalization(Matrix33 &F, Matrix33 &T0, Matrix33 &T1)
 {
-    Matrix33 denormalization_F=T1 * F * T0;
+    Matrix33 denormalization_F= transpose(T1) * F * T0;
     return denormalization_F;
 }
-
-Matrix compute_essential_E(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+//7 - scale scale_invariant F   where F(2,2) = 1.
+Matrix33 scale_F(Matrix33 &F)
 {
-    Matrix E;
-    for(int i=0;i<points_0.size();++i)
-    {
-        Vector2D pt0=points_0[i];
-        Vector2D pt1=points_1[i];
-        Vector e = (pt0.x()*pt1.x(),pt1.x()*pt0.y(),pt1.x(),pt1.y()*pt0.x(),pt1.y()*pt0.y(),pt1.y(),pt0.x(),pt0.y(),1);
-        E.set_row(i,e);
-    }
+    F(2,2)=1;
+    return F;
+}
+
+//8 - calculate E and 4 Rt settings from it (slide 20 -27)
+Matrix compute_E(Matrix33 &F, double &fx, double &fy,double &cx, double &cy)
+{
+    Matrix33 K=(fx,0,cx,0,fy,cy,0,0,1);
+    Matrix33 E= transpose(K) * F * K;
     return E;
 }
 
-void R_t(Matrix &E) {
-    // E=Udiag(1,1,0)VT=SR
+/** @brief  get relative position
+*	@param 	E	essential matrix
+*	@param 	R	output rotation matrix
+*	@param 	t	translate matrix
+*/
+void R_t(Matrix &E, Matrix33 &R, Vector3D &t) {
+
     int num_rows = E.rows();
     /// get the number of columns.
     int num_cols = E.cols();
 
     Matrix33 W(0,-1,0,1,0,0,0,0,1);
-    Matrix33 Z(0,1,0,-1,0,0,0,0,0);
-    Matrix U(num_rows, num_rows, 0.0);
-    Matrix33 diag(1,0,0,0,1,0,0,0,0);
-    Matrix V(num_cols, num_cols, 0.0);
-    svd_decompose(E,U,diag,V);
-    // R1=U WT VT or R2=U W VT
-    Matrix R1 = U* transpose(W) * V;
-    Matrix R2=U * W * V;
 
-    Vector t = U.get_column(U.cols()-1);
+    Matrix33 Z(0,1,0,-1,0,0,0,0,0);
+
+    Matrix U(num_rows, num_rows, 0.0);
+
+    Matrix33 diag(1,0,0,0,1,0,0,0,0);
+
+    Matrix V(num_cols, num_cols, 0.0);
+
+    svd_decompose(E,U,diag,V);
+
+    // R1=U WT VT or R2=U W VT
+
+    Matrix R1= determinant(U *W *V) *U *W*V;
+    Matrix R2= determinant(U* transpose(W)*V)*U* transpose(W)*V;
+
+    Vector t1 = U.get_column(U.cols()-1);
+    Vector t2 = -(U.get_column(U.cols() - 1));
+
+    Matrix34 projection_matrix1 = R1;
+    projection_matrix1.set_column(3,t1);
+
 }
+
 
 
 // TODO: Reconstruct 3D points. The main task is
@@ -235,7 +260,9 @@ bool Triangulation::triangulation(
     Matrix33 T1;
     std::vector<Vector2D> normalized_pt0= normalization(points_0,T0);
     std::vector<Vector2D> normalized_pt1= normalization(points_1,T1);
-
+    Matrix33 F = estimate_fundamental_F(normalized_pt0,normalized_pt1);
+    denormalization(F,T0,T1);
+    std::cout<<"F22 is "<<F(2,2)<<std::endl;
 
 
     /// Below are a few examples showing some useful data structures and APIs.
