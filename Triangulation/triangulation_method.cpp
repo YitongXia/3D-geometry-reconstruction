@@ -39,6 +39,27 @@ void print_matrix33(Matrix33 &T0)
     std::cout<<"\n";
 }
 
+void print_matrix44(Matrix44 &T0)
+{
+    std::cout<<"Matrix:"<<std::endl;
+    std::cout<<"the size is "<<T0.rows()<<" * "<<T0.cols()<<std::endl;
+    std::cout<<T0(0,0) <<", "<<T0(0,1) <<", "<<T0(0,2)<<","<<T0(0,3) <<"\n";
+    std::cout<<T0(1,0) <<", "<<T0(1,1) <<", "<<T0(1,2)<<","<<T0(1,3)  <<"\n";
+    std::cout<<T0(2,0) <<", "<<T0(2,1) <<", "<<T0(2,2)<<","<<T0(2,3)  <<"\n";
+    std::cout<<T0(3,0) <<", "<<T0(3,1) <<", "<<T0(3,2)<<","<<T0(3,3)  <<std::endl;
+    std::cout<<"\n";
+}
+
+void print_matrix34(Matrix34 &T0)
+{
+    std::cout<<"Matrix:"<<std::endl;
+    std::cout<<"the size is "<<T0.rows()<<" * "<<T0.cols()<<std::endl;
+    std::cout<<T0(0,0) <<", "<<T0(0,1) <<", "<<T0(0,2)<<","<<T0(0,3) <<"\n";
+    std::cout<<T0(1,0) <<", "<<T0(1,1) <<", "<<T0(1,2)<<","<<T0(1,3)  <<"\n";
+    std::cout<<T0(2,0) <<", "<<T0(2,1) <<", "<<T0(2,2)<<","<<T0(2,3)   <<std::endl;
+    std::cout<<"\n";
+}
+
 // TODO: check if the input is valid (always good because you never known how others will call your function).
 bool if_input_valid(const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
 {
@@ -202,34 +223,48 @@ Matrix33 scale_F(Matrix33 &F)
 }
 
 //8 - calculate E and 4 Rt settings from it (slide 20 -27)
-Matrix compute_E(Matrix33 &F, double &fx, double &fy,double &cx, double &cy)
+
+Matrix33 intrinsic(const double &fx, const double &fy,const double &cx, const double &cy)
 {
-    Matrix33 K=(fx,0,cx,0,fy,cy,0,0,1);
-    Matrix33 E= transpose(K) * F * K;
+    return Matrix33(fx,0,cx,
+            0,fy,cy,
+            0,0,1);
+}
+
+Matrix33 compute_E(Matrix33 &F, Matrix33 & K)
+{
+    Matrix33 E= K.transpose() * F * K;
     return E;
 }
 
 std::vector<Vector3D> compute_3d_coord(Matrix & R1, Vector &t, Matrix33 &K, const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
 {
-    Matrix34 Rt_matrix1 =(R1(0,0),R1(0,1),R1(0,2),t[0],
+    Matrix34 Rt_matrix1(R1(0,0),R1(0,1),R1(0,2),t[0],
             R1(1,0),R1(1,1),R1(1,2),t[1],
             R1(2,0),R1(2,1),R1(2,2),t[2]);
 
-    Matrix34 original_Rt=(1,0,0,0,
+    print_matrix34(Rt_matrix1);
+    print_matrix33(K);
+
+    Matrix34 original_Rt(1,0,0,0,
             0,1,0,0,
             0,0,1,0);
 
     Matrix M = K * original_Rt;
-    Matrix M1 = K * Rt_matrix1;
+    Matrix34 M1 = K * Rt_matrix1;
+    std::cout<<"matrix M1"<<std::endl;
+    print_matrix34(M1);
 
     std::vector<Vector3D> pt_3;
     for(int i=0;i<points_0.size();++i)
     {
-        Matrix A;
+        Matrix44 A;
         A.set_row(0, points_0[i].x()*M.get_row(2) - M.get_row(0));
         A.set_row(1,points_0[i].y()*M.get_row(2) - M.get_row(1));
         A.set_row(2,points_1[i].x() * M1.get_row(2) - M1.get_row(0));
         A.set_row(3,points_1[i].y() * M1.get_row(2) - M1.get_row(1));
+
+        print_matrix44(A);
 
         int num_rows = A.rows();
         int num_cols=A.cols();
@@ -273,17 +308,17 @@ void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx,
 
     // R1=U WT VT or R2=U W VT
 
-    Matrix R1= determinant(U * W * V.transpose()) * U * W * V.transpose();
-    Matrix R2= determinant(U * W.transpose() * V.transpose()) * U * W.transpose() * V.transpose();
-
+    Matrix33 R1= determinant(U * W * V.transpose()) * U * W * V.transpose();
+    print_matrix33(R1);
+    Matrix33 R2= determinant(U * W.transpose() * V.transpose()) * U * W.transpose() * V.transpose();
+    print_matrix33(R2);
     Vector t1 = U.get_column(U.cols()-1);
     Vector t2 = -(U.get_column(U.cols() - 1));
 
-    Matrix33 K=(fx,0,cx,0,fy,cy,0,0,1);
+    Matrix33 K= intrinsic(fx,fy,cx,cy);
 
     // for situation1:
     std::vector<std::vector<Vector3D>> pt_3d;
-
 
     pt_3d.emplace_back(compute_3d_coord(R1,t1,K,points_0,points_1));
     pt_3d.emplace_back(compute_3d_coord(R1,t2,K,points_0,points_1));
@@ -400,7 +435,11 @@ bool Triangulation::triangulation(
     Matrix33 F=denormalization(F1,T0,T1);
     Matrix33 scaleF= scale_F(F);
     print_matrix33(scaleF);
-    Matrix E = compute_E(scaleF,fx,fy,cx,cy);
+
+    Matrix33 K= intrinsic(fx,fy,cx,cy);
+    Matrix33 E = compute_E(scaleF,K);
+    print_matrix33(E);
+
     R_t(E,R,t,fx,fy,cx,cy,points_0,points_1);
 
 
