@@ -209,8 +209,19 @@ Matrix compute_E(Matrix33 &F, double &fx, double &fy,double &cx, double &cy)
     return E;
 }
 
-std::vector<Vector3D> compute_3d_coord(Matrix &M1, Matrix &M, const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+std::vector<Vector3D> compute_3d_coord(Matrix & R1, Vector &t, Matrix33 &K, const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
 {
+    Matrix34 Rt_matrix1 =(R1(0,0),R1(0,1),R1(0,2),t[0],
+            R1(1,0),R1(1,1),R1(1,2),t[1],
+            R1(2,0),R1(2,1),R1(2,2),t[2]);
+
+    Matrix34 original_Rt=(1,0,0,0,
+            0,1,0,0,
+            0,0,1,0);
+
+    Matrix M = K * original_Rt;
+    Matrix M1 = K * Rt_matrix1;
+
     std::vector<Vector3D> pt_3;
     for(int i=0;i<points_0.size();++i)
     {
@@ -236,7 +247,6 @@ std::vector<Vector3D> compute_3d_coord(Matrix &M1, Matrix &M, const std::vector<
 }
 
 
-
 /** @brief  get relative position
 *	@param 	E	essential matrix
 *	@param 	R	output rotation matrix
@@ -255,58 +265,67 @@ void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx,
 
     Matrix U(num_rows, num_rows, 0.0);
 
-    Matrix33 diag(1,0,0,0,1,0,0,0,0);
+    Matrix S(num_cols, num_cols, 0.0);
 
     Matrix V(num_cols, num_cols, 0.0);
 
-    svd_decompose(E,U,diag,V);
+    svd_decompose(E,U,S,V);
 
     // R1=U WT VT or R2=U W VT
 
-
-
-    Matrix R1= determinant(U *W *V) *U *W*V;
-    Matrix R2= determinant(U* transpose(W)*V)*U* transpose(W)*V;
+    Matrix R1= determinant(U * W * V.transpose()) * U * W * V.transpose();
+    Matrix R2= determinant(U * W.transpose() * V.transpose()) * U * W.transpose() * V.transpose();
 
     Vector t1 = U.get_column(U.cols()-1);
     Vector t2 = -(U.get_column(U.cols() - 1));
 
     Matrix33 K=(fx,0,cx,0,fy,cy,0,0,1);
 
-    // combination of R and t
-    Matrix34 Rt_matrix1 =(R1(0,0),R1(0,1),R1(0,2),t1[0],
-                    R1(1,0),R1(1,1),R1(1,2),t1[1],
-            R1(2,0),R1(2,1),R1(2,2),t1[2]);
-
-    Matrix34 Rt_matrix2 =(R1(0,0),R1(0,1),R1(0,2),t2[0],
-            R1(1,0),R1(1,1),R1(1,2),t2[1],
-            R1(2,0),R1(2,1),R1(2,2),t2[2]);
-
-    Matrix34 Rt_matrix3 =(R2(0,0),R2(0,1),R2(0,2),t1[0],
-            R2(1,0),R2(1,1),R2(1,2),t1[1],
-            R2(2,0),R2(2,1),R2(2,2),t1[2]);
-
-    Matrix34 Rt_matrix4 =(R2(0,0),R2(0,1),R2(0,2),t2[0],
-            R2(1,0),R2(1,1),R2(1,2),t2[1],
-            R2(2,0),R2(2,1),R2(2,2),t2[2]);
-
-    Matrix34 original_Rt=(1,0,0,0,
-            0,1,0,0,
-            0,0,1,0);
-
-    Matrix M = K * original_Rt;
-    Matrix M1 = K * Rt_matrix1;
-    Matrix M2 = K * Rt_matrix2;
-    Matrix M3 = K * Rt_matrix3;
-    Matrix M4 = K * Rt_matrix4;
-
     // for situation1:
-    std::vector<Vector3D> pt_3d_1= compute_3d_coord(M1,M,points_0,points_1);
-    std::vector<Vector3D> pt_3d_2= compute_3d_coord(M2,M,points_0,points_1);
-    std::vector<Vector3D> pt_3d_3= compute_3d_coord(M3,M,points_0,points_1);
-    std::vector<Vector3D> pt_3d_4= compute_3d_coord(M4,M,points_0,points_1);
+    std::vector<std::vector<Vector3D>> pt_3d;
 
 
+    pt_3d.emplace_back(compute_3d_coord(R1,t1,K,points_0,points_1));
+    pt_3d.emplace_back(compute_3d_coord(R1,t2,K,points_0,points_1));
+    pt_3d.emplace_back(compute_3d_coord(R2,t1,K,points_0,points_1));
+    pt_3d.emplace_back(compute_3d_coord(R2,t2,K,points_0,points_1));
+
+    int index=0;
+    int maximum_number=0;
+
+    for(int i=0;i<pt_3d.size();++i)
+    {
+        int count = 0;
+        for(auto &item:pt_3d[i])
+        {
+            if(item.z() >0) count++;
+        }
+        if(count>maximum_number)
+        {
+            maximum_number=count;
+            index=i;
+        }
+    }
+    if(index==0)
+    {
+        R=R1;
+        t=t1;
+    }
+    else if(index == 1)
+    {
+        R=R1;
+        t=t2;
+    }
+    else if(index == 2)
+    {
+        R=R2;
+        t=t1;
+    }
+    else if(index == 3)
+    {
+        R=R2;
+        t=t2;
+    }
 }
 
 
@@ -381,12 +400,12 @@ bool Triangulation::triangulation(
     Matrix33 F=denormalization(F1,T0,T1);
     Matrix33 scaleF= scale_F(F);
     print_matrix33(scaleF);
+    Matrix E = compute_E(scaleF,fx,fy,cx,cy);
+    R_t(E,R,t,fx,fy,cx,cy,points_0,points_1);
+
 
     /// Below are a few examples showing some useful data structures and APIs.
 
-
-    //--------------------------------------------------------------------------------------------------------------
-    // implementation starts ...
 
     // TODO: check if the input is valid (always good because you never known how others will call your function).
 
