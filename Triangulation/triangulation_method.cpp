@@ -209,12 +209,41 @@ Matrix compute_E(Matrix33 &F, double &fx, double &fy,double &cx, double &cy)
     return E;
 }
 
+std::vector<Vector3D> compute_3d_coord(Matrix &M1, Matrix &M, const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+{
+    std::vector<Vector3D> pt_3;
+    for(int i=0;i<points_0.size();++i)
+    {
+        Matrix A;
+        A.set_row(0, points_0[i].x()*M.get_row(2) - M.get_row(0));
+        A.set_row(1,points_0[i].y()*M.get_row(2) - M.get_row(1));
+        A.set_row(2,points_1[i].x() * M1.get_row(2) - M1.get_row(0));
+        A.set_row(3,points_1[i].y() * M1.get_row(2) - M1.get_row(1));
+
+        int num_rows = A.rows();
+        int num_cols=A.cols();
+
+        Matrix u(num_rows, num_rows, 0.0);   // initialized with 0s
+        Matrix s(num_rows, num_cols, 0.0);   // initialized with 0s
+        Matrix v(num_cols, num_cols, 0.0);   // initialized with 0s
+
+        svd_decompose(A,u,s,v);
+
+        Vector last_v=v.get_column(v.cols()-1);
+        pt_3.emplace_back(last_v[0],last_v[1],last_v[2]);
+    }
+    return pt_3;
+}
+
+
+
 /** @brief  get relative position
 *	@param 	E	essential matrix
 *	@param 	R	output rotation matrix
 *	@param 	t	translate matrix
 */
-void R_t(Matrix &E, Matrix33 &R, Vector3D &t) {
+void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx, double &cy,const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+{
 
     int num_rows = E.rows();
     /// get the number of columns.
@@ -234,16 +263,53 @@ void R_t(Matrix &E, Matrix33 &R, Vector3D &t) {
 
     // R1=U WT VT or R2=U W VT
 
+
+
     Matrix R1= determinant(U *W *V) *U *W*V;
     Matrix R2= determinant(U* transpose(W)*V)*U* transpose(W)*V;
 
     Vector t1 = U.get_column(U.cols()-1);
     Vector t2 = -(U.get_column(U.cols() - 1));
 
-    Matrix34 projection_matrix1 = R1;
-    projection_matrix1.set_column(3,t1);
+    Matrix33 K=(fx,0,cx,0,fy,cy,0,0,1);
+
+    // combination of R and t
+    Matrix34 Rt_matrix1 =(R1(0,0),R1(0,1),R1(0,2),t1[0],
+                    R1(1,0),R1(1,1),R1(1,2),t1[1],
+            R1(2,0),R1(2,1),R1(2,2),t1[2]);
+
+    Matrix34 Rt_matrix2 =(R1(0,0),R1(0,1),R1(0,2),t2[0],
+            R1(1,0),R1(1,1),R1(1,2),t2[1],
+            R1(2,0),R1(2,1),R1(2,2),t2[2]);
+
+    Matrix34 Rt_matrix3 =(R2(0,0),R2(0,1),R2(0,2),t1[0],
+            R2(1,0),R2(1,1),R2(1,2),t1[1],
+            R2(2,0),R2(2,1),R2(2,2),t1[2]);
+
+    Matrix34 Rt_matrix4 =(R2(0,0),R2(0,1),R2(0,2),t2[0],
+            R2(1,0),R2(1,1),R2(1,2),t2[1],
+            R2(2,0),R2(2,1),R2(2,2),t2[2]);
+
+    Matrix34 original_Rt=(1,0,0,0,
+            0,1,0,0,
+            0,0,1,0);
+
+    Matrix M = K * original_Rt;
+    Matrix M1 = K * Rt_matrix1;
+    Matrix M2 = K * Rt_matrix2;
+    Matrix M3 = K * Rt_matrix3;
+    Matrix M4 = K * Rt_matrix4;
+
+    // for situation1:
+    std::vector<Vector3D> pt_3d_1= compute_3d_coord(M1,M,points_0,points_1);
+    std::vector<Vector3D> pt_3d_2= compute_3d_coord(M2,M,points_0,points_1);
+    std::vector<Vector3D> pt_3d_3= compute_3d_coord(M3,M,points_0,points_1);
+    std::vector<Vector3D> pt_3d_4= compute_3d_coord(M4,M,points_0,points_1);
+
 
 }
+
+
 
 
 
