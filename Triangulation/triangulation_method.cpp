@@ -335,11 +335,6 @@ std::vector<int> positive_z(const Matrix33 &R, const Vector3D &t, const std::vec
 }
 
 
-/** @brief  get relative position
-*	@param 	E	essential matrix
-*	@param 	R	output rotation matrix
-*	@param 	t	translate matrix
-*/
 void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx, double &cy,const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1, std::vector<Vector3D> &points_3d)
 {
 
@@ -378,19 +373,11 @@ void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx,
     pt_3d.emplace_back(compute_3d_coord(R2,t1,K,points_0,points_1));
     pt_3d.emplace_back(compute_3d_coord(R2,t2,K,points_0,points_1));
 
-    R=R2;
-    t=t1;
-    points_3d=pt_3d[2];
+    R=R1;
+    t=t2;
+    points_3d=pt_3d[1];
 
 
-
-//    for(int i=0;i<result.size();++i)
-//    {
-//        if(result[i][0] == points_0.size() && result[i][1] == points_0.size())
-//        {
-//            R=
-//        }
-//    }
 }
 
 
