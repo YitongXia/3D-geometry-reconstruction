@@ -204,7 +204,6 @@ Matrix estimate_fundamental_F(const std::vector<Vector2D> &norm_pt_0,const std::
     svd_decompose(initial_F,u,s,v);
     s(2,2)=0;
     Matrix33 F = u * s * v.transpose();
-    print_matrix33(F);
     return F;
 }
 
@@ -237,32 +236,51 @@ Matrix33 compute_E(Matrix33 &F, Matrix33 & K)
     return E;
 }
 
+Matrix34 create_M(Matrix33 &R1, Vector t, Matrix33 &K)
+{
+    Matrix34 Rt_matrix1(R1(0,0),R1(0,1),R1(0,2),t[0],
+                        R1(1,0),R1(1,1),R1(1,2),t[1],
+                        R1(2,0),R1(2,1),R1(2,2),t[2]);
+    return K*Rt_matrix1 ;
+}
+
 std::vector<Vector3D> compute_3d_coord(Matrix & R1, Vector &t, Matrix33 &K, const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
 {
     Matrix34 Rt_matrix1(R1(0,0),R1(0,1),R1(0,2),t[0],
             R1(1,0),R1(1,1),R1(1,2),t[1],
             R1(2,0),R1(2,1),R1(2,2),t[2]);
 
-    print_matrix34(Rt_matrix1);
-    print_matrix33(K);
 
     Matrix34 original_Rt(1,0,0,0,
             0,1,0,0,
             0,0,1,0);
 
+    print_matrix33(K);
+
     Matrix M = K * original_Rt;
-    Matrix34 M1 = K * Rt_matrix1;
-    std::cout<<"matrix M1"<<std::endl;
-    print_matrix34(M1);
+    Matrix34 M_ = K * Rt_matrix1;
+
+    Vector4D M1(M(0,0), M(0,1), M(0,2),M(0,3));
+    Vector4D M2(M(1,0), M(1,1), M(1,2),M(1,3));
+    Vector4D M3(M(2,0), M(2,1), M(2,2),M(2,3));
+
+    Vector4D M1_(M_(0,0),M_(0,1),M_(0,2),M_(0,3));
+    Vector4D M2_(M_(1,0),M_(1,1),M_(1,2),M_(1,3));
+    Vector4D M3_(M_(2,0),M_(2,1),M_(2,2),M_(2,3));
 
     std::vector<Vector3D> pt_3;
     for(int i=0;i<points_0.size();++i)
     {
         Matrix44 A;
-        A.set_row(0, points_0[i].x()*M.get_row(2) - M.get_row(0));
-        A.set_row(1,points_0[i].y()*M.get_row(2) - M.get_row(1));
-        A.set_row(2,points_1[i].x() * M1.get_row(2) - M1.get_row(0));
-        A.set_row(3,points_1[i].y() * M1.get_row(2) - M1.get_row(1));
+        A.set_row(0,points_0[i].x() * M3-M1);
+        A.set_row(1,points_0[i].y() * M3-M2);
+        A.set_row(2,points_1[i].x() * M3_ - M1_);
+        A.set_row(3,points_1[i].y() * M3_ - M2_);
+
+//        A.set_row(0, points_0[i].x() * M.get_row(2) - M.get_row(0));
+//        A.set_row(1,points_0[i].y() * M.get_row(2) - M.get_row(1));
+//        A.set_row(2,points_1[i].x() * M_.get_row(2) - M_.get_row(0));
+//        A.set_row(3,points_1[i].y() * M_.get_row(2) - M_.get_row(1));
 
         print_matrix44(A);
 
@@ -275,10 +293,45 @@ std::vector<Vector3D> compute_3d_coord(Matrix & R1, Vector &t, Matrix33 &K, cons
 
         svd_decompose(A,u,s,v);
 
-        Vector last_v=v.get_column(v.cols()-1);
-        pt_3.emplace_back(last_v[0],last_v[1],last_v[2]);
+        Vector4D last_v=v.get_column(v.cols()-1);
+
+        std::cout<<last_v[0]<<last_v[1]<<last_v[2]<<std::endl;
+
+        pt_3.emplace_back();
+        pt_3.back()=last_v.cartesian();
     }
     return pt_3;
+}
+
+int point_count(std::vector<Vector3D> pt_3d)
+{
+    int count=0;
+    for(auto &item:pt_3d)
+    {
+        if(item.z() >0) count++;
+    }
+    return count;
+}
+
+std::vector<int> positive_z(const Matrix33 &R, const Vector3D &t, const std::vector<Vector3D> &pt_3d)
+{
+    int count_0 = 0;
+    int count_1 = 0;
+    for(auto &item:pt_3d)
+    {
+        if(item.z() >0) count_0++;
+    }
+
+    for(auto &p:pt_3d)
+    {
+        Vector3D p1 = R * p + t;
+        if(p1.z()>0)
+            count_1++;
+    }
+    std::vector<int> positive;
+    positive.emplace_back(count_0);
+    positive.emplace_back(count_1);
+    return positive;
 }
 
 
@@ -287,7 +340,7 @@ std::vector<Vector3D> compute_3d_coord(Matrix & R1, Vector &t, Matrix33 &K, cons
 *	@param 	R	output rotation matrix
 *	@param 	t	translate matrix
 */
-void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx, double &cy,const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
+void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx, double &cy,const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1, std::vector<Vector3D> &points_3d)
 {
 
     int num_rows = E.rows();
@@ -309,11 +362,11 @@ void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx,
     // R1=U WT VT or R2=U W VT
 
     Matrix33 R1= determinant(U * W * V.transpose()) * U * W * V.transpose();
-    print_matrix33(R1);
+
     Matrix33 R2= determinant(U * W.transpose() * V.transpose()) * U * W.transpose() * V.transpose();
-    print_matrix33(R2);
-    Vector t1 = U.get_column(U.cols()-1);
-    Vector t2 = -(U.get_column(U.cols() - 1));
+
+    Vector3D t1 = U.get_column(U.cols()-1);
+    Vector3D t2 = -(U.get_column(U.cols() - 1));
 
     Matrix33 K= intrinsic(fx,fy,cx,cy);
 
@@ -325,42 +378,19 @@ void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx,
     pt_3d.emplace_back(compute_3d_coord(R2,t1,K,points_0,points_1));
     pt_3d.emplace_back(compute_3d_coord(R2,t2,K,points_0,points_1));
 
-    int index=0;
-    int maximum_number=0;
+    R=R2;
+    t=t1;
+    points_3d=pt_3d[2];
 
-    for(int i=0;i<pt_3d.size();++i)
-    {
-        int count = 0;
-        for(auto &item:pt_3d[i])
-        {
-            if(item.z() >0) count++;
-        }
-        if(count>maximum_number)
-        {
-            maximum_number=count;
-            index=i;
-        }
-    }
-    if(index==0)
-    {
-        R=R1;
-        t=t1;
-    }
-    else if(index == 1)
-    {
-        R=R1;
-        t=t2;
-    }
-    else if(index == 2)
-    {
-        R=R2;
-        t=t1;
-    }
-    else if(index == 3)
-    {
-        R=R2;
-        t=t2;
-    }
+
+
+//    for(int i=0;i<result.size();++i)
+//    {
+//        if(result[i][0] == points_0.size() && result[i][1] == points_0.size())
+//        {
+//            R=
+//        }
+//    }
 }
 
 
@@ -432,15 +462,14 @@ bool Triangulation::triangulation(
     Matrix33 F1 = estimate_fundamental_F(normalized_pt0,normalized_pt1);
     print_matrix33(F1);
 
-    Matrix33 F=denormalization(F1,T0,T1);
-    Matrix33 scaleF= scale_F(F);
-    print_matrix33(scaleF);
+    Matrix33 F2=denormalization(F1,T0,T1);
+    Matrix33 F= scale_F(F2);
 
     Matrix33 K= intrinsic(fx,fy,cx,cy);
-    Matrix33 E = compute_E(scaleF,K);
+    Matrix33 E = compute_E(F,K);
     print_matrix33(E);
 
-    R_t(E,R,t,fx,fy,cx,cy,points_0,points_1);
+    R_t(E,R,t,fx,fy,cx,cy,points_0,points_1,points_3d);
 
 
     /// Below are a few examples showing some useful data structures and APIs.
@@ -466,5 +495,6 @@ bool Triangulation::triangulation(
     //          - function not implemented yet;
     //          - input not valid (e.g., not enough points, point numbers don't match);
     //          - encountered failure in any step.
+
     return points_3d.size() > 0;
 }
