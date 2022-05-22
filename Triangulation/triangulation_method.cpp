@@ -1,26 +1,3 @@
-/**
- * Copyright (C) 2015 by Liangliang Nan (liangliang.nan@gmail.com)
- * https://3d.bk.tudelft.nl/liangliang/
- *
- * This file is part of Easy3D. If it is useful in your research/work,
- * I would be grateful if you show your appreciation by citing it:
- * ------------------------------------------------------------------
- *      Liangliang Nan.
- *      Easy3D: a lightweight, easy-to-use, and efficient C++
- *      library for processing and rendering 3D data. 2018.
- * ------------------------------------------------------------------
- * Easy3D is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License Version 3
- * as published by the Free Software Foundation.
- *
- * Easy3D is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program. If not, see <http://www.gnu.org/licenses/>.
- */
 
 #include "triangulation.h"
 #include "matrix_algo.h"
@@ -169,14 +146,6 @@ Matrix estimate_fundamental_F(const std::vector<Vector2D> &norm_pt_0,const std::
         W.set_row(i,w);
     }
 
-    for(int i=0;i<W.rows();++i)
-    {
-        for(int j=0;j<W.get_row(i).size(); ++j)
-        {
-            std::cout<<W.get_row(i)[j]<<",";
-        }
-        std::cout<<"\n"<<std::endl;
-    }
 
     Matrix U(num_rows, num_rows, 0.0);   // initialized with 0s
     Matrix S(num_rows, num_cols, 0.0);   // initialized with 0s
@@ -226,8 +195,8 @@ Matrix33 scale_F(Matrix33 &F)
 Matrix33 intrinsic(const double &fx, const double &fy,const double &cx, const double &cy)
 {
     return Matrix33(fx,0,cx,
-            0,fy,cy,
-            0,0,1);
+                    0,fy,cy,
+                    0,0,1);
 }
 
 Matrix33 compute_E(Matrix33 &F, Matrix33 & K)
@@ -247,15 +216,14 @@ Matrix34 create_M(Matrix33 &R1, Vector t, Matrix33 &K)
 std::vector<Vector3D> compute_3d_coord(Matrix & R1, Vector &t, Matrix33 &K, const std::vector<Vector2D> &points_0,const std::vector<Vector2D> &points_1)
 {
     Matrix34 Rt_matrix1(R1(0,0),R1(0,1),R1(0,2),t[0],
-            R1(1,0),R1(1,1),R1(1,2),t[1],
-            R1(2,0),R1(2,1),R1(2,2),t[2]);
+                        R1(1,0),R1(1,1),R1(1,2),t[1],
+                        R1(2,0),R1(2,1),R1(2,2),t[2]);
 
 
     Matrix34 original_Rt(1,0,0,0,
-            0,1,0,0,
-            0,0,1,0);
+                         0,1,0,0,
+                         0,0,1,0);
 
-    print_matrix33(K);
 
     Matrix M = K * original_Rt;
     Matrix34 M_ = K * Rt_matrix1;
@@ -282,8 +250,6 @@ std::vector<Vector3D> compute_3d_coord(Matrix & R1, Vector &t, Matrix33 &K, cons
 //        A.set_row(2,points_1[i].x() * M_.get_row(2) - M_.get_row(0));
 //        A.set_row(3,points_1[i].y() * M_.get_row(2) - M_.get_row(1));
 
-        print_matrix44(A);
-
         int num_rows = A.rows();
         int num_cols=A.cols();
 
@@ -294,8 +260,6 @@ std::vector<Vector3D> compute_3d_coord(Matrix & R1, Vector &t, Matrix33 &K, cons
         svd_decompose(A,u,s,v);
 
         Vector4D last_v=v.get_column(v.cols()-1);
-
-        std::cout<<last_v[0]<<last_v[1]<<last_v[2]<<std::endl;
 
         pt_3.emplace_back();
         pt_3.back()=last_v.cartesian();
@@ -372,35 +336,40 @@ void R_t(Matrix &E, Matrix33 &R, Vector3D &t, double &fx, double &fy,double &cx,
     pt_3d.emplace_back(compute_3d_coord(R1,t2,K,points_0,points_1));
     pt_3d.emplace_back(compute_3d_coord(R2,t1,K,points_0,points_1));
     pt_3d.emplace_back(compute_3d_coord(R2,t2,K,points_0,points_1));
-
     R=R1;
     t=t2;
     points_3d=pt_3d[1];
 
+    std::vector<std::vector<int>> all_point;
+    all_point.emplace_back(positive_z(R1,t1,pt_3d[0]));
+    all_point.emplace_back(positive_z(R1,t2,pt_3d[1]));
+    all_point.emplace_back(positive_z(R2,t1,pt_3d[2]));
+    all_point.emplace_back(positive_z(R2,t2,pt_3d[3]));
 
+    if(all_point[0][0] == points_0.size() && all_point[0][1]==points_0.size())
+    {
+        R=R1;
+        t=t1;
+        points_3d=pt_3d[0];
+    }
+    else if(all_point[1][0] == points_0.size() && all_point[1][1]==points_0.size())
+    {
+        R=R1;
+        t=t2;
+        points_3d=pt_3d[1];
+    }
+    if(all_point[2][0] == points_0.size() && all_point[2][1]==points_0.size())
+    {
+        R=R2;
+        t=t1;
+        points_3d=pt_3d[2];
+    }if(all_point[3][0] == points_0.size() && all_point[3][1]==points_0.size())
+    {
+        R=R2;
+        t=t2;
+        points_3d=pt_3d[3];
+    }
 }
-
-
-
-
-
-// TODO: Reconstruct 3D points. The main task is
-//      - triangulate a pair of image points (i.e., compute the 3D coordinates for each corresponding point pair)
-void reconstruct() {
-
-}
-// TODO: Don't forget to
-//          - write your recovered 3D points into 'points_3d' (so the viewer can visualize the 3D points for you);
-//          - write the recovered relative pose into R and t (the view will be updated as seen from the 2nd camera,
-//            which can help you check if R and t are correct).
-//       You must return either 'true' or 'false' to indicate whether the triangulation was successful (so the
-//       viewer will be notified to visualize the 3D points and update the view).
-//       There are a few cases you should return 'false' instead, for example:
-//          - function not implemented yet;
-//          - input not valid (e.g., not enough points, point numbers don't match);
-//          - encountered failure in any step.
-
-
 
 /**
  * TODO: Finish this function for reconstructing 3D geometry from corresponding image points.
@@ -447,41 +416,14 @@ bool Triangulation::triangulation(
     std::vector<Vector2D> normalized_pt1= normalization(points_1,T1);
 
     Matrix33 F1 = estimate_fundamental_F(normalized_pt0,normalized_pt1);
-    print_matrix33(F1);
 
     Matrix33 F2=denormalization(F1,T0,T1);
     Matrix33 F= scale_F(F2);
 
     Matrix33 K= intrinsic(fx,fy,cx,cy);
     Matrix33 E = compute_E(F,K);
-    print_matrix33(E);
 
     R_t(E,R,t,fx,fy,cx,cy,points_0,points_1,points_3d);
-
-
-    /// Below are a few examples showing some useful data structures and APIs.
-
-
-    // TODO: check if the input is valid (always good because you never known how others will call your function).
-
-    // TODO: Estimate relative pose of two views. This can be subdivided into
-    //      - estimate the fundamental matrix F;
-    //      - compute the matrix E;
-    //      - recover rotation R and t.
-
-    // TODO: Reconstruct 3D points. The main task is
-    //      - triangulate a pair of image points (i.e., compute the 3D coordinates for each corresponding point pair)
-
-    // TODO: Don't forget to
-    //          - write your recovered 3D points into 'points_3d' (so the viewer can visualize the 3D points for you);
-    //          - write the recovered relative pose into R and t (the view will be updated as seen from the 2nd camera,
-    //            which can help you check if R and t are correct).
-    //       You must return either 'true' or 'false' to indicate whether the triangulation was successful (so the
-    //       viewer will be notified to visualize the 3D points and update the view).
-    //       There are a few cases you should return 'false' instead, for example:
-    //          - function not implemented yet;
-    //          - input not valid (e.g., not enough points, point numbers don't match);
-    //          - encountered failure in any step.
 
     return points_3d.size() > 0;
 }
